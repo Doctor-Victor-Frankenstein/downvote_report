@@ -86,22 +86,22 @@ def option_select(options):
         pass
     return 
 
-def get_rank(report_list):
+def get_rank(vote_list):
     total = 0
     flags_total = 0
     players = []
     rank = []
-    for i in report_list:
+    for i in vote_list:
         total += int(i['rshares'])
         players.append(i['Downvoter'])
     players = set(players)
     for p in players:
         player_rshares = 0
-        for i in report_list:
+        for i in vote_list:
             if i['Downvoter'] == p:
                 flags_total += 1
                 player_rshares += int(i['rshares'])
-        downvote_sbd_amount = round(stm.rshares_to_sbd(total,3))
+        downvote_sbd_amount = round(stm.rshares_to_sbd(player_rshares,3))
         rank.append({
                         'Downvoter': i['Downvoter'],
                         'Total Flags': flags_total,
@@ -116,18 +116,19 @@ def get_rank(report_list):
 class DownvoteReport:
     'Common base class for all reports'
 
-    def __init__(self, account=None, stop_date=None, start_date=None):
+    def __init__(self, account=None, stop_date=None, start_date=None, vote_list=None):
        self.account = account
        self.stop_date = stop_date
        self.start_date = start_date
+       self.vote_list = vote_list
                                         
     def incoming_to_account(self):
         nodes = NodeList().get_nodes()
         stm = Steem(node=nodes)
         set_shared_steem_instance(stm)
         #list to store dictionary variables
-        report_list = []
-        account=(self.account or input("Downvoted User Account?"))
+        self.vote_list = []
+        account=(self.account or input("Downvoted User Account? "))
         try:
             downvoted_account = Account(account)
         except AccountDoesNotExistsException:
@@ -188,7 +189,7 @@ class DownvoteReport:
                                            'Remaining Rewards': str(pending_payout_value),
                                            'Timestamp': vote['timestamp'],
                                            'ID': vote['_id']}
-                        report_list.append(report_dict)
+                        self.vote_list.append(report_dict)
                 hist_index += 10000
         else:
             for vote in (downvoted_account.get_account_history(-1,10000,start=self.start_date,stop=self.stop_date,only_ops=['vote'])):
@@ -212,19 +213,19 @@ class DownvoteReport:
                                        'Timestamp': vote['timestamp'],
                                        'ID': vote['_id']
                                   }
-                    report_list.append(report_dict)
+                    self.vote_list.append(report_dict)
         #remove duplicates
-        report_list = [dict(t) for t in {tuple(d.items()) for d in report_list}]
-        export_csv('incoming_downvote_report',report_list)
-        return report_list
+        self.vote_list = [dict(t) for t in {tuple(d.items()) for d in self.vote_list}]
+        export_csv('incoming_downvote_report',self.vote_list)
+        return self.vote_list
 
     def outgoing_from_account(self):
         nodes = NodeList().get_nodes()
         stm = Steem(node=nodes)
         set_shared_steem_instance(stm)
         #list to store dictionary variables
-        report_list = []
-        account=(self.account or input("Downvoter User Account?"))
+        self.vote_list = []
+        account=(self.account or input("Downvoter User Account? "))
         try:
             downvoter_account = Account(account)
         except AccountDoesNotExistsException:
@@ -285,7 +286,7 @@ class DownvoteReport:
                                           'Timestamp': vote['timestamp'],
                                           'ID': vote['_id']
                                           }
-                        report_list.append(report_dict)
+                        self.vote_list.append(report_dict)
                 hist_index += 1000
         else:
             for vote in (downvoter_account.get_account_history(-1,10000,start=self.start_date,stop=self.stop_date,only_ops=['vote'])):
@@ -308,11 +309,11 @@ class DownvoteReport:
                                     'Timestamp': vote['timestamp'],
                                     'ID': vote['_id']
                                   }
-                    report_list.append(report_dict)
+                    self.vote_list.append(report_dict)
         #remove duplicates
-        report_list = [dict(t) for t in {tuple(d.items()) for d in report_list}]
-        export_csv('outgoing_downvote_report',report_list)
-        return report_list      
+        self.vote_list = [dict(t) for t in {tuple(d.items()) for d in self.vote_list}]
+        export_csv('outgoing_downvote_report',self.vote_list)
+        return self.vote_list      
 
     def prompt_start_stop_time():
         year = int(input("Until Year Value? "))
@@ -321,16 +322,18 @@ class DownvoteReport:
         s_date = datetime.datetime(int(year), int(month), int(day),0,0,0)
         return s_date
 
-user_option = option_select(options)
+def main():
+    user_option = option_select(options)
+    if(user_option == 1):
+        dreport = DownvoteReport()
+        report = dreport.incoming_to_account()
+    elif(user_option == 2):
+        dreport = DownvoteReport()
+        report = dreport.outgoing_from_account()
+    else:
+        print("Invalid Option Selected")
+        sys.exit(1)
+    get_rank(report)
 
-if(user_option == 1):
-    dreport = DownvoteReport()
-    report = dreport.incoming_to_account()
-elif(user_option == 2):
-    dreport = DownvoteReport()
-    report = dreport.outgoing_from_account()
-else:
-    print("Invalid Option Selected")
-    sys.exit(1)
-
-get_rank(report)
+if __name__== "__main__":
+    main()
