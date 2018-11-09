@@ -139,7 +139,7 @@ class DownvoteReport:
             #input option to enable input of self.start_date
             stop_option = input("Would you like to specify stop date? y/n ")
             if(stop_option == 'y'):
-                self.stop_date = prompt_start_stop_time()
+                self.stop_date = self.prompt_start_stop_time()
             else:
                 self.stop_date = None
         if(self.start_date==None):
@@ -147,7 +147,7 @@ class DownvoteReport:
             start_option = input("Would you like to specify start date? y/n ")
             #start date prompts
             if(start_option == 'y'):
-                self.start_date = prompt_start_stop_time()
+                self.start_date = self.prompt_start_stop_time()
             else:
                 self.start_date= None
         try:
@@ -236,7 +236,7 @@ class DownvoteReport:
             #input option to enable input of self.start_date
             stop_option = input("Would you like to specify stop date? y/n ")
             if(stop_option == 'y'):
-                self.stop_date = prompt_start_stop_time()
+                self.stop_date = self.prompt_start_stop_time()
             else:
                 self.stop_date = None
         if(self.start_date==None):
@@ -244,7 +244,7 @@ class DownvoteReport:
             start_option = input("Would you like to specify start date? y/n ")
             #start date prompts
             if(start_option == 'y'):
-                self.start_date = prompt_start_stop_time()
+                self.start_date = self.prompt_start_stop_time()
             else:
                 self.start_date= None
         try:
