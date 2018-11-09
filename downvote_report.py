@@ -315,7 +315,7 @@ class DownvoteReport:
         export_csv('outgoing_downvote_report',self.vote_list)
         return self.vote_list      
 
-    def prompt_start_stop_time():
+    def prompt_start_stop_time(self):
         year = int(input("Until Year Value? "))
         month = int(input("Until Month Value? "))
         day = int(input("Until Day Value? "))
