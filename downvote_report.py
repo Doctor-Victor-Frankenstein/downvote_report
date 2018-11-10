@@ -162,6 +162,7 @@ class DownvoteReport:
         except TypeError as e:
             print(e)
             sys.exit(1)
+        #estimated number of operations between stop and start to assess if limit is breached
         start_v_ops = downvoted_account.estimate_virtual_op_num(self.start_date or datetime.datetime.utcnow())
         stop_v_ops = downvoted_account.estimate_virtual_op_num(self.stop_date or datetime.datetime(1969,12,31,23,59,59))
         start_stop_op_dif = start_v_ops - stop_v_ops
@@ -259,6 +260,7 @@ class DownvoteReport:
         except TypeError as e:
             print(e)
             sys.exit(1)
+        #estimated number of operations between stop and start to assess if limit is breached
         start_v_ops = downvoter_account.estimate_virtual_op_num(self.start_date or datetime.datetime.utcnow())
         stop_v_ops = downvoter_account.estimate_virtual_op_num(self.stop_date or datetime.datetime(1969,12,31,23,59,59))
         start_stop_op_dif = start_v_ops - stop_v_ops
