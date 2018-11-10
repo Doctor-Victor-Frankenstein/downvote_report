@@ -103,7 +103,7 @@ def get_rank(vote_list):
                 player_rshares += int(i['rshares'])
         downvote_sbd_amount = round(stm.rshares_to_sbd(player_rshares,3))
         rank.append({
-                        'Downvoter': i['Downvoter'],
+                        'Downvoter': p,
                         'Total Flags': flags_total,
                         'SBD amount': str(downvote_sbd_amount),
                         'rshares': total,
