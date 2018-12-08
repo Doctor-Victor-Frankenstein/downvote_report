@@ -106,7 +106,7 @@ def get_rank(vote_list):
                         'Downvoter': p,
                         'Total Flags': flags_total,
                         'SBD amount': str(downvote_sbd_amount),
-                        'rshares': total,
+                        'rshares': player_rshares,
                         'Rank': rank_dict[abs(player_rshares)],
                         'Image': img_dict[abs(player_rshares)]
                     })
